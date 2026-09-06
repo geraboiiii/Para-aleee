@@ -1,0 +1,534 @@
+# Para-aleee
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Alexia 🌻</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #fff8dc, #ffe082, #fff3b0);
+            color: #5a4100;
+            overflow-x: hidden;
+        }
+
+        /* Lluvia de imágenes: muchas figuras cayendo */
+        .lluvia-clare {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .clare-caida {
+            position: absolute;
+            top: -220px;
+            left: var(--left);
+            width: var(--size);
+            height: auto;
+            opacity: var(--opacity);
+            transform-origin: center;
+            filter: drop-shadow(0 5px 7px rgba(80, 50, 0, 0.18));
+            animation:
+                caerClare var(--duration) linear var(--delay) infinite,
+                balancearClare calc(var(--duration) * 0.55) ease-in-out var(--delay) infinite alternate;
+        }
+
+        @keyframes caerClare {
+            0% {
+                transform: translate3d(0, -220px, 0) rotate(var(--rotation));
+            }
+            100% {
+                transform: translate3d(var(--drift), 125vh, 0) rotate(calc(var(--rotation) + 360deg));
+            }
+        }
+
+        @keyframes balancearClare {
+            0% {
+                margin-left: -14px;
+            }
+            100% {
+                margin-left: 14px;
+            }
+        }
+
+        /* Mantiene el contenido por encima de la lluvia */
+        .contenedor {
+            position: relative;
+            z-index: 2;
+        }
+
+        .contenedor {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .corazon {
+            font-size: 55px;
+            animation: latido 1.5s infinite;
+        }
+
+        @keyframes latido {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        h1 {
+            font-size: clamp(45px, 8vw, 80px);
+            color: #d89b00;
+            text-shadow: 3px 3px 0 #fff;
+            margin-top: 10px;
+        }
+
+        .subtitulo {
+            font-size: 21px;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .carta {
+            max-width: 700px;
+            margin-top: 35px;
+            padding: 35px;
+            background: rgba(255,255,255,0.75);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(130, 90, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .carta h2 {
+            color: #d89b00;
+            margin-bottom: 15px;
+        }
+
+        .carta p {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        /* Girasoles */
+        .titulo-girasoles {
+            margin-top: 55px;
+            font-size: 30px;
+            color: #8b6500;
+            text-align: center;
+        }
+
+        .girasoles {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 35px;
+            margin-top: 30px;
+            max-width: 900px;
+        }
+
+        .girasol {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #ffd21f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 75px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 8px 20px rgba(130, 90, 0, 0.25);
+            user-select: none;
+        }
+
+        .girasol:hover {
+            transform: scale(1.15) rotate(8deg);
+            box-shadow: 0 12px 30px rgba(130, 90, 0, 0.4);
+        }
+
+        .girasol:active {
+            transform: scale(0.95);
+        }
+
+        .instruccion {
+            margin-top: 18px;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(60, 40, 0, 0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .modal.activo {
+            display: flex;
+        }
+
+        .mensaje {
+            position: relative;
+            max-width: 550px;
+            width: 100%;
+            background: #fffdf0;
+            border-radius: 30px;
+            padding: 45px 30px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: aparecer 0.4s ease;
+        }
+
+        @keyframes aparecer {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .mensaje .flor {
+            font-size: 65px;
+        }
+
+        .mensaje h2 {
+            color: #d89b00;
+            margin: 15px 0;
+        }
+
+        .mensaje p {
+            font-size: 20px;
+            line-height: 1.7;
+        }
+
+        .cerrar {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            border: none;
+            background: transparent;
+            font-size: 30px;
+            color: #8b6500;
+            cursor: pointer;
+        }
+
+        .final {
+            margin-top: 60px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .final h2 {
+            font-size: 32px;
+            color: #c58c00;
+        }
+
+        .final p {
+            margin-top: 12px;
+            font-size: 18px;
+        }
+
+        footer {
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .carta {
+                padding: 25px 20px;
+            }
+
+            .girasol {
+                width: 105px;
+                height: 105px;
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Lluvia de Clare Crockett -->
+    <div class="lluvia-clare" id="lluviaClare" aria-hidden="true"></div>
+
+
+    <main class="contenedor">
+
+        <div class="corazon">💛</div>
+
+        <h1>Para Alexia</h1>
+
+        <p class="subtitulo">
+            Hice este pequeño lugar pensando especialmente en ti...
+            porque hay personas que simplemente hacen que todo se vea
+            un poquito más bonito. 🌻
+        </p>
+
+
+        <section class="carta">
+
+            <h2>Una pequeña confesión 💌</h2>
+
+            <p>
+                Alexia, quizá no sepa exactamente cómo decirte todo lo
+                que pienso cuando estoy contigo, así que decidí escribirlo
+                aquí.
+                <br><br>
+
+                Me gusta tu forma de ser, tu manera de sonreír y esos
+                pequeños detalles que probablemente tú ni siquiera notas.
+                <br><br>
+
+                Si pudiera regalarte algo, te regalaría un campo lleno
+                de girasoles, porque dicen que estas flores siempre buscan
+                la luz...
+                <br><br>
+
+                y, de alguna manera, siento que tú haces lo mismo conmigo. 💛
+            </p>
+
+        </section>
+
+
+        <h2 class="titulo-girasoles">
+            🌻 Hay algo escondido en cada girasol 🌻
+        </h2>
+
+        <p class="instruccion">
+            Haz clic en los girasoles para descubrirlos...
+        </p>
+
+
+        <section class="girasoles">
+
+            <div class="girasol" onclick="mostrarMensaje(1)">
+                🌻
+            </div>
+
+            <div class="girasol" onclick="mostrarMensaje(2)">
+                🌻
+            </div>
+
+            <div class="girasol" onclick="mostrarMensaje(3)">
+                🌻
+            </div>
+
+            <div class="girasol" onclick="mostrarMensaje(4)">
+                🌻
+            </div>
+
+            <div class="girasol" onclick="mostrarMensaje(5)">
+                🌻
+            </div>
+
+            <div class="girasol" onclick="mostrarMensaje(6)">
+                🌻
+            </div>
+            
+            <div class="girasol" onclick="mostrarMensaje(7)">
+                🌻
+            </div>
+
+        </section>
+
+
+        <section class="final">
+
+            <h2>Y si llegaste hasta aquí... 💛</h2>
+
+            <p>
+                Solo quería que supieras que eres alguien muy especial
+                para mí, Alexia.
+            </p>
+
+            <p>
+                Gracias por existir y por hacer que mis días tengan
+                un poquito más de color. 🌻
+            </p>
+
+            <p style="margin-top:25px; font-size:25px;">
+                ❤️
+            </p>
+
+        </section>
+
+        <footer>
+            Hecho con cariño especialmente para Alexia 🌻
+        </footer>
+
+    </main>
+
+
+    <!-- Ventana de mensajes -->
+
+    <div class="modal" id="modal">
+
+        <div class="mensaje">
+
+            <button class="cerrar" onclick="cerrarMensaje()">
+                ×
+            </button>
+
+            <div class="flor">🌻</div>
+
+            <h2 id="tituloMensaje"></h2>
+
+            <p id="textoMensaje"></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* Lluvia de imágenes de Clare Crockett */
+        const lluvia = document.getElementById("lluviaClare");
+
+        function crearLluviaClare() {
+            const cantidad = window.innerWidth < 600 ? 22 : 38;
+
+            for (let i = 0; i < cantidad; i++) {
+                const imagen = document.createElement("img");
+
+                imagen.className = "clare-caida";
+                imagen.src = "clare_crockett_sin_fondo.png";
+                imagen.alt = "";
+
+                const size = 55 + Math.random() * 75;
+                const duration = 7 + Math.random() * 9;
+                const delay = -(Math.random() * duration);
+                const left = Math.random() * 100;
+                const drift = (Math.random() * 140 - 70).toFixed(0) + "px";
+                const rotation = (Math.random() * 30 - 15).toFixed(0) + "deg";
+                const opacity = (0.35 + Math.random() * 0.45).toFixed(2);
+
+                imagen.style.setProperty("--size", size + "px");
+                imagen.style.setProperty("--duration", duration + "s");
+                imagen.style.setProperty("--delay", delay + "s");
+                imagen.style.setProperty("--left", left + "%");
+                imagen.style.setProperty("--drift", drift);
+                imagen.style.setProperty("--rotation", rotation);
+                imagen.style.setProperty("--opacity", opacity);
+
+                lluvia.appendChild(imagen);
+            }
+        }
+
+        crearLluviaClare();
+
+        const mensajes = {
+
+            1: {
+                titulo: "Un pequeño secreto 🤫",
+                texto: "Desde que te conocí, hay momentos en los que simplemente apareces en mis pensamientos sin avisar. Y la verdad... no me molesta en absoluto. 💛"
+            },
+
+            2: {
+                titulo: "Como un girasol 🌻",
+                texto: "Si los girasoles buscan la luz, creo que yo encontré algo parecido cuando te conocí a ti."
+            },
+
+            3: {
+                titulo: "Tu sonrisa ❤️",
+                texto: "Hay sonrisas bonitas... y luego está la tuya. Esa que puede cambiar completamente mi día."
+            },
+
+            4: {
+                titulo: "Para ti 💌",
+                texto: "No sé qué vaya a pasar mañana, pero sí sé que me alegra muchísimo haberte conocido."
+            },
+
+            5: {
+                titulo: "Una verdad 🌻",
+                texto: "Quizá todavía no te lo digo lo suficiente, pero eres una persona que poco a poco se ha vuelto muy especial para mí."
+            },
+
+            6: {
+                titulo: "El penúltimo girasol 💛",
+                texto: "Y si tuviera que elegir una sola flor para regalarte, siempre elegiría un girasol. Porque me recuerda a ti: bonita, brillante y capaz de iluminar cualquier lugar."
+            },
+
+            7: {
+                titulo: "El último girasol 💛",
+                texto: "Solo se que quiero acercarme a Dios contigo, Te amo Tres Millones."
+            }
+
+
+        };
+
+
+        function mostrarMensaje(numero) {
+
+            document.getElementById("tituloMensaje").textContent =
+                mensajes[numero].titulo;
+
+            document.getElementById("textoMensaje").textContent =
+                mensajes[numero].texto;
+
+            document.getElementById("modal").classList.add("activo");
+        }
+
+
+        function cerrarMensaje() {
+
+            document.getElementById("modal").classList.remove("activo");
+
+        }
+
+
+        /* Cerrar haciendo clic fuera del mensaje */
+
+        document.getElementById("modal").addEventListener("click", function(e) {
+
+            if (e.target === this) {
+                cerrarMensaje();
+            }
+
+        });
+
+
+        /* Tecla ESC para cerrar */
+
+        document.addEventListener("keydown", function(e) {
+
+            if (e.key === "Escape") {
+                cerrarMensaje();
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
